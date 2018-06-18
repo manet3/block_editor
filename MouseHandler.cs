@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace SimpleBlockEditor
@@ -80,7 +81,7 @@ namespace SimpleBlockEditor
         protected void MouseHandle(object sender, EventArgs e) => 
             (((DependencyObject)sender).GetValue(HandledObject.CommandProperty) 
             as ICommand)
-            ?.Execute(new MouseArguments { Sender = sender, Args = e});
+            ?.Execute(new MouseArguments { Sender = (FrameworkElement)sender, Args = e});
     }
 
     #region mouseHandler derivatives

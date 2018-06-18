@@ -15,12 +15,18 @@ using System.Windows.Shapes;
 
 namespace SimpleBlockEditor
 {
-    public partial class Block : UserControl
+    /// <summary>
+    /// Interaction logic for Connector.xaml
+    /// </summary>
+    public partial class Connector : UserControl
     {
-        public DependencyProperty ConnectLocationProperty;
-        public Block()
+        //TO FIND NORMAL SOLUTION
+        public BlockViewModel Block1 { get; set; }
+        public BlockViewModel Block2 { get; set; }
+        public Connector(BlockViewModel b1, BlockViewModel b2)
         {
-            //ConnectLocationProperty = DependencyProperty.Register("ConnectorLocation", typeof(Point), typeof(Block), new Fra)
+            Block1 = b1;
+            Block2 = b2;
             InitializeComponent();
         }
     }

@@ -42,10 +42,14 @@
                 </Style>
             </DockPanel.Resources>-->
             <ToolBar DockPanel.Dock="Top" Height="30" Margin="5,5,0,0" HorizontalAlignment="Center">
-                <Button Command="{Binding NewBlockCommand}" Height="{Binding RelativeSource={RelativeSource FindAncestor,
-                    AncestorType=StackPanel}, Path=Width}">Add</Button>
+                <Button Command="{Binding NewBlockCommand}" >Add</Button>
+                <Button Command="{Binding RemoveCommand}" 
+                        Visibility="{Binding RemoveButtonVis}">Remove</Button>
+                <Separator></Separator>
+                <Button Command="{Binding DrawConnectorCommand}"
+                        Visibility="{Binding ConnectButtonVis}">Connect</Button>
             </ToolBar>
-            <ItemsControl ItemsSource="{Binding Blocks}">
+            <ItemsControl ItemsSource="{Binding CanvasElements}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas></Canvas>
@@ -53,8 +57,5 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </DockPanel>
-        <Canvas Grid.RowSpan="2">
-            
-        </Canvas>
     </Grid>
 </Window>

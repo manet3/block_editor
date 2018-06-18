@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SimpleBlockEditor"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Cursor="Hand"
+             d:DesignHeight="300" d:DesignWidth="300" Cursor="Cross"
              Canvas.Top="{Binding Y}" Canvas.Left="{Binding X}"
              local:MouseDown.MouseCommand ="{Binding MouseDownCommand}"
              local:MouseMove.MouseCommand="{Binding MouseMoveCommand}"
@@ -13,15 +13,39 @@
     <UserControl.DataContext>
         <local:BlockViewModel/>
     </UserControl.DataContext>
-    <Grid Width="Auto" Height="Auto" MinHeight="30" MinWidth="100" >
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
-        <Rectangle Grid.RowSpan="2" RadiusX="10" RadiusY="10" Stroke="AliceBlue" StrokeThickness="5" Fill="Azure"></Rectangle>
-        <TextBox Margin="10,10,10,10"></TextBox>
-        <ToolBar Grid.Row="1" HorizontalAlignment="Left">
-            
-        </ToolBar>
+    <Grid>
+        <Grid.Resources>
+            <Style x:Key="selectBord" TargetType="Rectangle">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+                <Setter Property="Visibility" Value="Hidden"></Setter>
+            </Style>
+        </Grid.Resources>
+        <Rectangle Style="{StaticResource selectBord}" Grid.RowSpan="2" RadiusX="10" RadiusY="10" StrokeThickness="10" 
+                   Fill="Azure">
+            <Rectangle.Stroke>
+                <RadialGradientBrush>
+                    <GradientStop Color="BlueViolet" Offset="0.9"></GradientStop>
+                    <GradientStop Color="White" Offset="1.5"></GradientStop>
+                </RadialGradientBrush>
+            </Rectangle.Stroke>
+        </Rectangle>
+
+        <Grid Width="Auto" Height="Auto" MinHeight="30" MinWidth="100" Margin="5,5,5,5">
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <Rectangle Grid.RowSpan="2" RadiusX="10" RadiusY="10" Stroke="AliceBlue" StrokeThickness="5" Fill="Azure"></Rectangle>
+            <RichTextBox Margin="10,10,10,10"></RichTextBox>
+            <ToolBar Grid.Row="1" HorizontalAlignment="Left">
+
+            </ToolBar>
+        </Grid>
     </Grid>
 </UserControl>

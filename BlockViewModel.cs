@@ -9,15 +9,36 @@ using System.Windows.Input;
 
 namespace SimpleBlockEditor
 {
-    class BlockViewModel:INotifyPropertyChanged
+    public class BlockViewModel:INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event EventHandler<bool> SelectedChabged;
+
         #region ICommands
         public ICommand MouseMoveCommand { get; set; }
         public ICommand MouseDownCommand { get; set; }
         public ICommand MouseUpCommand { get; set; }
         #endregion
 
+        #region property_fields
+        private bool _isSelected;
         private bool _isDragged;
+        private Point _position;
+        #endregion
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged(nameof(IsSelected));
+                SelectedChabged?.Invoke(this, _isSelected);
+            }
+        }
+
+        
         private bool IsDragged
         {
             get => _isDragged;
@@ -28,11 +49,14 @@ namespace SimpleBlockEditor
             }
         }
 
-        private double _x;
-        public double X { get => _x; set { _x = value; OnPropertyChanged("X"); } }
+        public double X { get => _position.X; set { _position.X = value; OnPropertyChanged("X"); } }
 
-        private double _y;
-        public double Y { get => _y; set{ _y = value; OnPropertyChanged("Y"); } }
+        public double Y { get => _position.Y; set{ _position.Y = value; OnPropertyChanged("Y"); } }
+
+        #region logical fields
+        private Point _lastPosition;
+        #endregion
+
 
         public BlockViewModel()
         {      
@@ -44,15 +68,17 @@ namespace SimpleBlockEditor
         private void OnMouseClick(object obj)
         {
             IsDragged = true;
+            _lastPosition = GetMousePosition((MouseArguments)obj);
+            IsSelected = !IsSelected;
         }
 
         private void OnMouseMove(object obj)
         {
-            var arguments = (MouseArguments)obj;
-            var sender = arguments.Sender as FrameworkElement;
-            var args = arguments.Args as MouseEventArgs;
-            X = args.GetPosition(sender).X;
-            Y = args.GetPosition(sender).Y;
+            var position = GetMousePosition((MouseArguments)obj);
+            var dX = position.X - _lastPosition.X;
+            var dY = position.Y - _lastPosition.Y;
+            X += dX;
+            Y += dY;
         }
 
         private void OnMouseUp(object obj)
@@ -60,11 +86,20 @@ namespace SimpleBlockEditor
             IsDragged = false;
         }
 
+        private Point GetMousePosition(MouseArguments arguments)
+        {
+            var sender = arguments.Sender as FrameworkElement;
+            var args = arguments.Args as MouseEventArgs 
+                ?? arguments.Args as MouseButtonEventArgs;
+            return new Point(args.GetPosition(sender).X, 
+                args.GetPosition(sender).Y);
+        }
+
         private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        
     }
 }
